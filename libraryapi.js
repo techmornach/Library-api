@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
+const os = require("os");
 
 // Create Express app
 const app = express();
@@ -122,5 +123,13 @@ app.get("/api/books/page/:page", async (req, res) => {
 // Start the server
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
+  const networkInterfaces = os.networkInterfaces();
+  const ipAddresses = Object.values(networkInterfaces)
+    .flatMap((interfaces) => interfaces.filter((iface) => iface.family === "IPv4" && !iface.internal))
+    .map((iface) => iface.address);
+
+  console.log("Server started on the following IP addresses:");
+  ipAddresses.forEach((ip) => console.log(ip));
+
   console.log(`Server started on port ${port}`);
 });
